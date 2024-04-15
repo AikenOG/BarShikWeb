@@ -27,3 +27,9 @@
 |:--:|:--:|
 |![Функция 1](https://github.com/AikenOG/BarShikWeb/blob/main/assets/category.jpg)|![Функция 2](https://github.com/AikenOG/BarShikWeb/blob/main/assets/zakazi.jpg)|
 |*Работа с категориями товаров*|*Работа с заказами mysql*|
+
+## Структура базы данных
+|Таблица пользователей|Таблица продуктов|Таблица категорий|
+|:--:|:--:|:--:|
+|![Таблица пользователей](https://github.com/AikenOG/BarShikWeb/blob/main/assets/users.jpg)|![Таблица продуктов](https://github.com/AikenOG/BarShikWeb/blob/main/assets/products.jpg)|![Таблица категорий](https://github.com/AikenOG/BarShikWeb/blob/main/assets/categsql.jpg)|
+|*Структура таблицы пользователей*|*Структура таблицы продуктов*|*Структура таблицы категорий*|
