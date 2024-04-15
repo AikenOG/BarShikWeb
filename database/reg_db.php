@@ -1,24 +1,39 @@
-<?php 
+<?php
 include "connectdb.php";
 
-$email = htmlspecialchars(trim($_POST['email']),ENT_QUOTES); // Удаляет все лишнее и записываем значение в переменную //$login
-$password = htmlspecialchars(trim($_POST['password']),ENT_QUOTES); 
-if(mb_strlen($password) < 5 || mb_strlen($password) > 100){//mb_strlen — Получает длину строки
-	echo "Недопустимая длина пароля";
-	exit();
+$email = htmlspecialchars(trim($_POST['email']), ENT_QUOTES);
+$password = htmlspecialchars(trim($_POST['password']), ENT_QUOTES);
+
+// Проверка длины пароля
+if (mb_strlen($password) < 5 || mb_strlen($password) > 100) {
+    echo "Недопустимая длина пароля";
+    exit();
 }
-$result1 = mysqli_query($con,"SELECT * FROM `users` WHERE `email` = '$email'");
-$result2 = mysqli_query($con,"SELECT * FROM `users` WHERE `password_hash` = '$password'");
-$user1 = mysqli_fetch_assoc($result1); // Конвертируем в массив
-$user2 = mysqli_fetch_assoc($result2); // Конвертируем в массив
-if(!empty($user1)){//empty — Проверяет, пуста ли переменная
-	echo "Данная почта уже используется!";
-	exit();
+
+// Подготовка и выполнение запроса для поиска почты
+$stmt = $mysqli->prepare("SELECT * FROM `users` WHERE `email` = ?");
+$stmt->bind_param("s", $email);
+$stmt->execute();
+$result = $stmt->get_result();
+if ($result->num_rows > 0) {
+    echo "Данная почта уже используется!";
+    exit();
 }
-if(!empty($user2)){//empty — Проверяет, пуста ли переменная
-	echo "Данный  уже используется!";
-	exit();
+
+// Хеширование пароля
+$hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+// Вставка нового пользователя
+$insert_stmt = $mysqli->prepare("INSERT INTO `users` (`email`, `password_hash`, `Bonus_points`) VALUES (?, ?, '1')");
+$insert_stmt->bind_param("ss", $email, $hashed_password);
+if ($insert_stmt->execute()) {
+    $_SESSION["user_id"] = $mysqli->insert_id;  // Сохраняем ID нового пользователя в сессию
+    header('Location: ../../user/personal-cab.php');
+} else {
+    echo "Ошибка при регистрации пользователя";
 }
-$insert = mysqli_query($con,"INSERT INTO `users` (  `email`,`password_hash`, `Bonus_points`)VALUES( '$email','$password', '1' )");
-// $_SESSION["user_id"] = mysqli_insert_id($con);
-header('Location: ../../user/personal-cab.php');
+
+$insert_stmt->close();
+$stmt->close();
+$mysqli->close();
+?>

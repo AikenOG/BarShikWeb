@@ -11,7 +11,7 @@
                     <a href="">Каталог</a>
                     <a href="">Корзина</a>
                     <a href="#footer">Контакты</a>
-                    <a href="user\auth\auth.php">Войти</a>
+                    <a href="http://barshikweb/user/auth/auth.php">Войти</a>
                 </div>
             </div>
         </div>

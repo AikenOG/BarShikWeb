@@ -1,5 +1,12 @@
-<!-- database\connectdb.php -->
-
 <?php
-$con = mysqli_connect("localhost", "root", "", "BarShik"); //адресс сервера , логин, пароль, имя бд
+$host = 'localhost'; // Адрес сервера
+$username = 'root'; // Имя пользователя
+$password = ''; // Пароль
+$dbname = 'BarShik'; // Имя базы данных
+
+$mysqli = new mysqli($host, $username, $password, $dbname);
+
+if ($mysqli->connect_error) {
+    die('Ошибка подключения: ' . $mysqli->connect_error);
+}
 ?>
