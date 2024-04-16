@@ -1,9 +1,10 @@
 # Описание проекта
 
 ## Главная страница
-|![Главная страница](https://github.com/AikenOG/BarShikWeb/blob/main/assets/main.jpg)|
-|:--:|
-|*Главная страница сайта*|
+|![Главная страница](https://github.com/AikenOG/BarShikWeb/blob/main/assets/main.jpg)|![Товары из выбранной категории](https://github.com/AikenOG/BarShikWeb/blob/main/assets/choosed_products)|
+|:--:|:--:|
+|*Главная страница сайта*|*Товары из выбранной категории*|
+
 
 ## Вход и регистрация
 |Вход|Регистрация|
