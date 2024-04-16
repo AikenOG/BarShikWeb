@@ -1,59 +1,90 @@
+<?php 
+include 'database/connectdb.php'; // Подключение к базе данных
+
+// Получение всех категорий
+$categoryQuery = "SELECT Category_id, Name FROM Category ORDER BY Name";
+$categoryResult = $mysqli->query($categoryQuery);
+
+if (!$categoryResult) {
+    echo "Ошибка: " . $mysqli->error;
+    $mysqli->close();
+    exit;
+}
+
+// Получение всех продуктов
+$productQuery = "SELECT Id_product, Name, Description, Category_id, Price, Image FROM Product ORDER BY Category_id, Name";
+$productResult = $mysqli->query($productQuery);
+
+$productsByCategory = [];
+while ($product = $productResult->fetch_assoc()) {
+    $productsByCategory[$product['Category_id']][] = $product;
+}
+
+$mysqli->close();
+?>
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="design\css\style.css">
-    <title>Главная</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-<!-- //*для слайдера*// -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="design/css/style.css">
+    <title>Каталог продуктов</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        .button-details {
+            background-color: #0abab5; /* Цвет тифани */
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .button-details:hover {
+            background-color: #08a2a0;
+            color: #ffffff;
+        }
+    </style>
 </head>
-<body >
+<body>
 <?php include "header.php"; ?>
-<main>
-    <div class="catalog">
-            <div class="cat-text"><h2>Каталог</h2></div>
-            <div class="category">
-                <button class="button-category">Соки</button>
-                <button class="button-category">Кофе</button>
-                <button class="button-category">Газированные напитки</button>
-                <button class="button-category">Молочные напитки</button>
-                <button class="button-category">Вода</button>
-                <button class="button-category">Детские напитки</button>
-            </div>
-            <div class="bloc-drinks">
-                
-                <div class="drink">
-                            <div class="tovar">
-                        <img src="design\img\coffee.jpg" alt="">
-                        <h4>Латте</h3>
-                        <p>230р</p>
-                        <button class=" button-tovar">Добавить в корзину</button>
-                            </div>
-                            <div class="tovar">
-                    <img src="design\img\water.jpg" alt="">
-                    <h4>Вода</h3>
-                    <p>99.99р</p>
-                        <button class=" button-tovar">Добавить в корзину</button>
-                            </div>
-                            <div class="tovar">
-                    <img src="design\img\Sok.png" alt="">
-                    <h4>Сок</h3>
-                    <p>110р</p>
-                        <button class=" button-tovar">Добавить в корзину</button>
-                            </div>
+<main class="container mt-4">
+    <h2 class="mb-3">Каталог</h2>
+    <div class="row g-3 mb-4">
+        <?php foreach ($categoryResult->fetch_all(MYSQLI_ASSOC) as $category): ?>
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title"><?= htmlspecialchars($category['Name']); ?></h5>
+                        <button class="button-details" data-bs-toggle="modal" data-bs-target="#productModal" onclick="loadProducts(<?= $category['Category_id']; ?>)">Подробнее</button>
                     </div>
-                
+                </div>
             </div>
-            <button class="podrobnee">Подробнее</button>
+        <?php endforeach; ?>
     </div>
+</main>
+
+<!-- Модальное окно для товаров -->
+<div class="modal fade" id="productModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Товары категории</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-3" id="modalProductsContainer">
+                    <!-- Сюда будут динамически загружаться товары -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- часть с текстом -->
 <div class="description">
     <div class="text-discription">
@@ -130,6 +161,35 @@
         <p class="copirater">© 2023 Копирование запрещено. Все права защищены.</p> 
     </div>
 </footer>
+
+<script>
+function loadProducts(categoryId) {
+    const products = <?= json_encode($productsByCategory); ?>;
+    const container = document.getElementById('modalProductsContainer');
+    container.innerHTML = ''; // Очистка предыдущих товаров
+
+    if (products[categoryId]) {
+        products[categoryId].forEach(product => {
+            container.innerHTML += `
+                <div class="col-md-4">
+                    <div class="card">
+                        <img src="${product.Image}" class="card-img-top" alt="${product.Name}">
+                        <div class="card-body">
+                            <h5 class="card-title">${product.Name}</h5>
+                            <p class="card-text">${product.Price}р</p>
+                            <button class="btn btn-success">Добавить в корзину</button>
+                        </div>
+                    </div>
+                </div>`;
+        });
+    } else {
+        container.innerHTML = '<p>В этой категории пока нет товаров.</p>';
+    }
+}
+</script>
+
+
+
 </body>
 </html>
 
@@ -146,3 +206,4 @@
 
     setInterval(nextSlide, 9000);
 </script>
+

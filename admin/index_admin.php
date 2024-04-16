@@ -10,12 +10,30 @@ include '..\database\connectdb.php';
     <title>Админ панель</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        .btn-tiffany {
+            background-color: #0abab5; /* Цвет тифани */
+            color: white;
+            border: none;
+        }
+        .btn-tiffany:hover {
+            background-color: #08a2a0;
+            color: white;
+        }
+        .img-thumbnail {
+            height: 100px;
+            object-fit: cover; /* Для лучшего отображения изображений */
+        }
+        .modal-content {
+            background: #f8f9fa; /* Светлый фон для модальных окон */
+        }
+    </style>
 </head>
 <body>
 <?php include 'nav/nav_admin.php'; ?>
     <div class="container mt-4">
         <table class="table">
-            <thead>
+            <thead class="table-light">
                 <tr>
                     <th scope="col">Название</th>
                     <th scope="col">Категория</th>
@@ -37,9 +55,9 @@ include '..\database\connectdb.php';
                                 <td>{$row['Name']}</td>
                                 <td>{$row['CategoryName']}</td>
                                 <td>{$row['Price']}</td>
-                                <td><img src='{$row['Image']}' alt='Изображение товара' class='img-thumbnail' style='width: 100px;'></td>
+                                <td><img src='{$row['Image']}' alt='Изображение товара' class='img-thumbnail'></td>
                                 <td>
-                                    <button class='btn btn-warning' data-bs-toggle='modal' data-bs-target='#editProductModal{$row['Id_product']}'>Редактировать</button>
+                                    <button class='btn btn-tiffany' data-bs-toggle='modal' data-bs-target='#editProductModal{$row['Id_product']}'>Редактировать</button>
                                     <form action='products_crud/delete_product.php' method='post' style='display: inline;'>
                                         <input type='hidden' name='id' value='{$row['Id_product']}'>
                                         <button type='submit' class='btn btn-danger' onclick='return confirm(\"Вы уверены, что хотите удалить этот товар?\");'>Удалить</button>
