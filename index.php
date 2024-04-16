@@ -49,6 +49,10 @@ $mysqli->close();
             background-color: #08a2a0;
             color: #ffffff;
         }
+        .mb-4 {
+            margin-bottom: 2.5rem !important;
+            margin-top: 1.5rem !important;
+            }
     </style>
 </head>
 <body>
