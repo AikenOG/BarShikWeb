@@ -25,10 +25,11 @@
 
 
 ### Дополнительные функции админ панели
-|Управление категориями|
+|Управление категориями|Страница категорий|
 |:--:|:--:|
 |![Добавление категории](https://github.com/AikenOG/BarShikWeb/blob/main/assets/add_categ.jpg) ![Редактирование категории](https://github.com/AikenOG/BarShikWeb/blob/main/assets/edit_categ.jpg)|![Страница работы с категориями](https://github.com/AikenOG/BarShikWeb/blob/main/assets/category.jpg)|
 |*Добавление и редактирование категорий*|*Страница категорий*|
+
 
 
 
