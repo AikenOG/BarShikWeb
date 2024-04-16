@@ -18,15 +18,18 @@
 
 ## Административная панель
 ### Главная страница админ панели
-|![Главная страница админ панели](https://github.com/AikenOG/BarShikWeb/blob/main/assets/tovari.jpg)|
-|:--:|
-|*Главная страница админ панели*|
+|![Управление товарами](https://github.com/AikenOG/BarShikWeb/blob/main/assets/tovari.jpg)|![Добавление товаров](https://github.com/AikenOG/BarShikWeb/blob/main/assets/add_tovar.jpg)|![Редактирование товаров](https://github.com/AikenOG/BarShikWeb/blob/main/assets/edit_tovar.jpg)|
+|:--:|:--:|:--:|
+|*Управление товарами*|*Добавление товаров*|*Редактирование товаров*|
+
 
 ### Дополнительные функции админ панели
-|Категории|Заказы|
+|Управление категориями|
 |:--:|:--:|
-|![Функция 1](https://github.com/AikenOG/BarShikWeb/blob/main/assets/category.jpg)|![Функция 2](https://github.com/AikenOG/BarShikWeb/blob/main/assets/zakazi.jpg)|
-|*Работа с категориями товаров*|*Работа с заказами mysql*|
+|![Добавление категории](https://github.com/AikenOG/BarShikWeb/blob/main/assets/add_categ.jpg) ![Редактирование категории](https://github.com/AikenOG/BarShikWeb/blob/main/assets/edit_categ.jpg)|![Страница работы с категориями](https://github.com/AikenOG/BarShikWeb/blob/main/assets/category.jpg)|
+|*Добавление и редактирование категорий*|*Страница категорий*|
+
+
 
 ## Структура базы данных
 |Таблица пользователей|Таблица продуктов|Таблица категорий|

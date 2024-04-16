@@ -9,6 +9,45 @@ include '..\..\database\connectdb.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Управление категориями</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .btn-edit {
+            background-color: #0abab5; /* Цвет тифани */
+            color: white;
+            border-color: #0abab5; /* Ensure the border is the same */
+        }
+        .btn-edit:hover {
+            background-color: #08a0a0; /* Slightly darker on hover */
+            color: white;
+            border-color: #08a0a0;
+        }
+        .btn-secondary {
+            background-color: #e02f2f;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: #bf2424;
+            color: white;
+        }
+
+        .add-product-btn {
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 16px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .add-product-btn:hover {
+            background-color: #45a049;
+            color: white;
+            transform: scale(1.05);
+        }
+
+    </style>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
@@ -34,7 +73,7 @@ include '..\..\database\connectdb.php';
                             <td>{$row['Category_id']}</td>
                             <td>{$row['Name']}</td>
                             <td>
-                                <button class='btn btn-success' data-bs-toggle='modal' data-bs-target='#editCategoryModal{$row['Category_id']}'>Редактировать</button>
+                                <button class='btn btn-edit' data-bs-toggle='modal' data-bs-target='#editCategoryModal{$row['Category_id']}'>Редактировать</button>
                                 <!-- Форма удаления -->
                                 <form action='crud/delete_category.php' method='post' style='display: inline;'>
                                     <input type='hidden' name='id' value='{$row['Category_id']}'>
@@ -51,7 +90,7 @@ include '..\..\database\connectdb.php';
 
         </table>
 
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+        <button type="button" class="btn add-product-btn" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
             Добавить категорию
         </button>
 

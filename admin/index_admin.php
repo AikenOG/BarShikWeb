@@ -1,5 +1,27 @@
 <?php 
+// Подключаемся к базе данных
 include '..\database\connectdb.php';
+
+// Запросы к базе данных для получения данных о товарах
+$productQuery = "SELECT Product.Id_product, Product.Name, Product.Category_id, Product.Description, Product.Price, Product.Image, Category.Name AS CategoryName FROM Product JOIN Category ON Product.Category_id = Category.Category_id";
+$result = $mysqli->query($productQuery);
+
+$products = [];
+if ($result) {
+    while ($row = $result->fetch_assoc()) {
+        $products[] = $row;
+    }
+}
+
+// Запрос к базе данных для получения категорий
+$categoryQuery = "SELECT Category_id, Name FROM Category";
+$categoriesResult = $mysqli->query($categoryQuery);
+$categories = [];
+if ($categoriesResult) {
+    while ($cat = $categoriesResult->fetch_assoc()) {
+        $categories[$cat['Category_id']] = $cat['Name'];
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -27,70 +49,66 @@ include '..\database\connectdb.php';
         .modal-content {
             background: #f8f9fa; /* Светлый фон для модальных окон */
         }
+        .card-footer button, .card-footer form {
+            display: inline-block;
+        }
+        table {
+            width: 100%;
+        }
+        .table-card {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 20px;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+        .add-product-btn {
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 16px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .add-product-btn:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body>
 <?php include 'nav/nav_admin.php'; ?>
     <div class="container mt-4">
-        <table class="table">
-            <thead class="table-light">
-                <tr>
-                    <th scope="col">Название</th>
-                    <th scope="col">Категория</th>
-                    <th scope="col">Стоимость</th>
-                    <th scope="col">Изображение</th>
-                    <th scope="col">Действия</th>
+        <table>
+            <?php foreach ($products as $row): ?>
+                <tr class="table-card">
+                    <td><img src="<?= $row['Image'] ?>" class="img-thumbnail" alt="Изображение товара"></td>
+                    <td>
+                        <h5><?= $row['Name'] ?></h5>
+                        <p>Категория: <?= $categories[$row['Category_id']] ?></p>
+                        <p>Цена: <?= $row['Price'] ?> руб.</p>
+                        <p>Описание: <?= $row['Description'] ?></p>
+                        <div>
+                            <button class="btn btn-tiffany" data-bs-toggle="modal" data-bs-target="#editProductModal<?= $row['Id_product'] ?>">Редактировать</button>
+                            <form action="products_crud/delete_product.php" method="post" style="display: inline;">
+                                <input type='hidden' name='id' value='<?= $row['Id_product'] ?>'>
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Вы уверены, что хотите удалить этот товар?');">Удалить</button>
+                            </form>
+                        </div>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                <?php
-                
-                $query = "SELECT Product.Name, Product.Price, Product.Image, Category.Name AS CategoryName, Category.Category_id, Product.Id_product
-                        FROM Product
-                        JOIN Category ON Product.Category_id = Category.Category_id";
-                $result = $mysqli->query($query);
-                if ($result) {
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<tr>
-                                <td>{$row['Name']}</td>
-                                <td>{$row['CategoryName']}</td>
-                                <td>{$row['Price']}</td>
-                                <td><img src='{$row['Image']}' alt='Изображение товара' class='img-thumbnail'></td>
-                                <td>
-                                    <button class='btn btn-tiffany' data-bs-toggle='modal' data-bs-target='#editProductModal{$row['Id_product']}'>Редактировать</button>
-                                    <form action='products_crud/delete_product.php' method='post' style='display: inline;'>
-                                        <input type='hidden' name='id' value='{$row['Id_product']}'>
-                                        <button type='submit' class='btn btn-danger' onclick='return confirm(\"Вы уверены, что хотите удалить этот товар?\");'>Удалить</button>
-                                    </form>
-                                </td>
-                            </tr>";
-                    }
-                } else {
-                    echo "<tr><td colspan='5'>Произошла ошибка при загрузке данных</td></tr>";
-                }
-                ?>
-            </tbody>
+            <?php endforeach; ?>
         </table>
-
-        <?php
-
-        // Запрос к базе данных для получения категорий
-        $categoryQuery = "SELECT Category_id, Name FROM Category";
-        $categoriesResult = $mysqli->query($categoryQuery);
-        $categoryOptions = "";
-
-        if ($categoriesResult) {
-            while ($cat = $categoriesResult->fetch_assoc()) {
-                $categoryOptions .= "<option value='{$cat['Category_id']}'>{$cat['Name']}</option>";
-            }
-        } else {
-            $categoryOptions = "<option value=''>Ошибка загрузки категорий</option>";
-        }
-        ?>
-
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">
-            Добавление товара
+        
+        <button type="button" class="add-product-btn" data-bs-toggle="modal" data-bs-target="#addProductModal">
+            Добавить товар
         </button>
+
 
         <!-- Модальное окно для добавления товара -->
         <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
