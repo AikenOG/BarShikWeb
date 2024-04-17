@@ -223,7 +223,7 @@ footer{
     flex-direction: column;
     width: 15%;
     justify-content: space-evenly;
-    height: 200px;
+    height: 195px;
     border-radius: 10px;
     align-items: center;
 } 
@@ -248,7 +248,7 @@ footer{
     flex-direction: column;
     width: 15%;
     justify-content: space-evenly;
-    height: 164px;
+    height: 152px;
     border-radius: 10px;
 
 }

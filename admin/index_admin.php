@@ -17,12 +17,16 @@ if ($result) {
 $categoryQuery = "SELECT Category_id, Name FROM Category";
 $categoriesResult = $mysqli->query($categoryQuery);
 $categories = [];
+$categoryOptions = ''; // Инициализация строки для HTML-опций
 if ($categoriesResult) {
     while ($cat = $categoriesResult->fetch_assoc()) {
         $categories[$cat['Category_id']] = $cat['Name'];
+        // Создаем HTML-опцию для каждой категории
+        $categoryOptions .= '<option value="' . $cat['Category_id'] . '">' . htmlspecialchars($cat['Name']) . '</option>';
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="ru">
