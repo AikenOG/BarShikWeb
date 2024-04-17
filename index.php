@@ -1,5 +1,13 @@
 <?php 
+session_start(); // Важно: session_start() должен быть в начале скрипта перед выводом любого содержимого.
+
 include 'database/connectdb.php'; // Подключение к базе данных
+
+// Проверка, авторизован ли пользователь
+if (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id'];
+    // Можно выполнять запросы или операции, зависящие от пользователя
+}
 
 // Получение всех категорий
 $categoryQuery = "SELECT Category_id, Name FROM Category ORDER BY Name";
@@ -22,6 +30,7 @@ while ($product = $productResult->fetch_assoc()) {
 
 $mysqli->close();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="ru">
@@ -181,7 +190,7 @@ function loadProducts(categoryId) {
                         <div class="card-body">
                             <h5 class="card-title">${product.Name}</h5>
                             <p class="card-text">${product.Price}р</p>
-                            <button class="btn btn-success">Добавить в корзину</button>
+                            <button onclick="addToCart(${product.Id_product})" class="btn btn-success">Добавить в корзину</button>
                         </div>
                     </div>
                 </div>`;
@@ -190,14 +199,36 @@ function loadProducts(categoryId) {
         container.innerHTML = '<p>В этой категории пока нет товаров.</p>';
     }
 }
+
+function addToCart(productId) {
+    const userId = <?= $_SESSION['user_id'] ?>; // Берем ID пользователя из PHP сессии
+    fetch('user/cart/crud/add_to_cart.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `user_id=${userId}&product_id=${productId}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            window.location.href = 'user/cart/personal_cart.php';
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(error => console.error('Ошибка:', error));
+}
 </script>
+
+
 
 
 
 </body>
 </html>
 
-<script>
+<!-- <script>
     const slider = document.querySelector('.slider');
     const slides = document.querySelectorAll('.slide');
     let currentSlide = 0;
@@ -209,5 +240,5 @@ function loadProducts(categoryId) {
     }
 
     setInterval(nextSlide, 9000);
-</script>
+</script> -->
 

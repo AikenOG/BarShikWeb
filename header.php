@@ -1,3 +1,6 @@
+<?php
+session_start(); // Необходимо начать сессию, чтобы использовать переменные сессии
+?>
 <header content="width=device-width, initial-scale=1">
     <div class="container">
         <div class="naw-header">
@@ -7,9 +10,13 @@
             <div class="naw-menu d-flex align-items-center gap-3 mt-3">
                 <a href="/" class="custom-btn">Главная</a>
                 <a href="#" class="custom-btn">Каталог</a>
-                <a href="#" class="custom-btn">Корзина</a>
+                <a href="http://barshikweb/user/cart/personal_cart.php" class="custom-btn">Корзина</a>
                 <a href="#footer" class="custom-btn">Контакты</a>
-                <a href="http://barshikweb/user/auth/auth.php" class="custom-btn-login">Войти</a>
+                <?php if(isset($_SESSION['user_id'])): ?>
+                    <a href="http://barshikweb/user/check_auth.php" class="custom-btn-login">Профиль</a>
+                <?php else: ?>
+                    <a href="http://barshikweb/user/auth/auth.php" class="custom-btn-login">Войти</a>
+                <?php endif; ?>
             </div>
         </div>
     </div>
