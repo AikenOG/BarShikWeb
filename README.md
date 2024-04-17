@@ -30,9 +30,6 @@
 |![Добавление категории](https://github.com/AikenOG/BarShikWeb/blob/main/assets/add_categ.jpg)<br>*Добавление категорий*<br>![Редактирование категории](https://github.com/AikenOG/BarShikWeb/blob/main/assets/edit_categ.jpg)<br>*Редактирование категорий*|![Страница работы с категориями](https://github.com/AikenOG/BarShikWeb/blob/main/assets/category.jpg)<br>*Страница категорий*|
 
 
-
-
-
 ## Структура базы данных
 |Таблица пользователей|Таблица продуктов|Таблица категорий|
 |:--:|:--:|:--:|
