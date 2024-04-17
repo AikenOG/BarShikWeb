@@ -31,7 +31,7 @@
 
 
 ## Структура базы данных
-|Таблица пользователей|Таблица продуктов|Таблица категорий|
+|Таблица пользователей|Таблица продуктов|Таблица категорий|Таблица корзины|
 |:--:|:--:|:--:|:--:|
 |![Таблица пользователей](https://github.com/AikenOG/BarShikWeb/blob/main/assets/users.jpg)|![Таблица продуктов](https://github.com/AikenOG/BarShikWeb/blob/main/assets/products.jpg)|![Таблица категорий](https://github.com/AikenOG/BarShikWeb/blob/main/assets/categsql.jpg)|[Таблица корзины заказов](https://github.com/AikenOG/BarShikWeb/blob/main/assets/basket.jpg)|
 |*Структура таблицы пользователей*|*Структура таблицы продуктов*|*Структура таблицы категорий*|*Структура таблицы корзины*|
