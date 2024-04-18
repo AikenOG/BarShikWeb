@@ -33,9 +33,3 @@
 |Управление заказами|
 |:--:|
 |![Страница управления заказами](https://github.com/AikenOG/BarShikWeb/blob/main/assets/edit_orders.jpg)<br>*Страница заказов*<br>![Изменение статуса](https://github.com/AikenOG/BarShikWeb/blob/main/assets/edit_status.jpg)<br>*Изменение статуса заказа*|
-
-## Структура базы данных
-|Таблица пользователей|Таблица продуктов|Таблица категорий|Таблица корзины|
-|:--:|:--:|:--:|:--:|
-|![Таблица пользователей](https://github.com/AikenOG/BarShikWeb/blob/main/assets/users.jpg)|![Таблица продуктов](https://github.com/AikenOG/BarShikWeb/blob/main/assets/products.jpg)|![Таблица категорий](https://github.com/AikenOG/BarShikWeb/blob/main/assets/categsql.jpg)|[Таблица корзины заказов](https://github.com/AikenOG/BarShikWeb/blob/main/assets/basket.jpg)|
-|*Структура таблицы пользователей*|*Структура таблицы продуктов*|*Структура таблицы категорий*|*Структура таблицы корзины*|
