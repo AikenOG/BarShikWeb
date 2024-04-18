@@ -14,13 +14,8 @@
 
 ## Корзина и чек пользователя
 |Корзина|Оформление заказа|
-|:--:|:--:|:--:|
+|:--:|:--:|
 |![Корзина](https://github.com/AikenOG/BarShikWeb/blob/main/assets/cart.jpg)<br>*Страница корзины*<br>![Оформление](https://github.com/AikenOG/BarShikWeb/blob/main/assets/check.jpg)<br>*Страница оформления заказа*|
-
-## Корзина и чек пользователя
-|![Корзина](https://github.com/AikenOG/BarShikWeb/blob/main/assets/lichka.jpg)|
-|:--:|
-|*Личный кабинет пользователя*|
 
 ## Административная панель
 ### Главная страница админ панели
