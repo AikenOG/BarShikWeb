@@ -74,7 +74,7 @@ $mysqli->close();
                 <div class="card h-100">
                     <div class="card-body">
                         <h5 class="card-title"><?= htmlspecialchars($category['Name']); ?></h5>
-                        <button class="button-details" data-bs-toggle="modal" data-bs-target="#productModal" onclick="loadProducts(<?= $category['Category_id']; ?>)">Подробнее</button>
+                        <button class="button-details" data-bs-toggle="modal" data-bs-target="#productModal" onclick="loadProducts(<?= $category['Category_id']; ?>)">Просмотреть</button>
                     </div>
                 </div>
             </div>
@@ -212,7 +212,8 @@ function addToCart(productId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            window.location.href = 'user/cart/personal_cart.php';
+            alert('Продукт успешно добавлен в корзину!');
+            // window.location.href = 'user/cart/personal_cart.php';
         } else {
             alert(data.message);
         }

@@ -22,6 +22,9 @@ include_once(__DIR__ . '/../config.php');
                         <a class="nav-link" href="<?php echo $orderAdminPath; ?>">Управление заказами</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="<?php echo $OwnCabinet; ?>">Личный Кабинет</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="<?php echo $indexpath; ?>">Выйти</a>
                     </li>
                 </ul>

@@ -1,3 +1,62 @@
+<?php
+session_start();
+include '../../database/connectdb.php';
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if (isset($_POST['edit_status'])) {
+        $orderId = $_POST['order_id'];
+        $newStatus = $_POST['new_status'];
+
+        // Подготовка запроса на обновление статуса
+        $stmt = $mysqli->prepare("UPDATE Orders SET Status = ? WHERE Id_order = ?");
+        $stmt->bind_param("si", $newStatus, $orderId);
+        $stmt->execute();
+        $stmt->close();
+        // Перезагрузка страницы для отображения изменений
+        header("Location: ".$_SERVER['PHP_SELF']);
+        exit;
+    } elseif (isset($_POST['delete_order'])) {
+        $orderId = $_POST['order_id'];
+
+        // Подготовка запроса на удаление заказа
+        $stmt = $mysqli->prepare("DELETE FROM Orders WHERE Id_order = ?");
+        $stmt->bind_param("i", $orderId);
+        $stmt->execute();
+        $stmt->close();
+        // Перезагрузка страницы для отображения изменений
+        header("Location: ".$_SERVER['PHP_SELF']);
+        exit;
+    }
+}
+
+// Запрос к базе данных для получения информации о заказах
+$query = "SELECT o.Id_order, o.Date_of_order, o.Status, o.Total_price, o.Used_bonuses, o.Accrued_bonuses, u.name AS UserName, GROUP_CONCAT(p.Name SEPARATOR ', ') AS ProductNames
+          FROM Orders o
+          JOIN Order_Product op ON o.Id_order = op.Id_order
+          JOIN Product p ON op.Id_product = p.Id_product
+          JOIN users u ON o.User_id = u.User_id
+          GROUP BY o.Id_order
+          ORDER BY o.Date_of_order DESC";
+$result = $mysqli->query($query);
+
+if (!$result) {
+    // Обработка ошибки выполнения запроса
+    die("Ошибка при получении данных о заказах: " . $mysqli->error);
+}
+
+// Запрос для получения возможных статусов из ENUM
+$statusQuery = "SHOW COLUMNS FROM Orders WHERE Field = 'Status'";
+$statusResult = $mysqli->query($statusQuery);
+$statusRow = $statusResult->fetch_assoc();
+$statusTypes = $statusRow['Type'];  // Получает строку вида "enum('Обработка','Доставляется','Отменен')"
+
+// Извлечение индивидуальных значений из строки ENUM
+preg_match("/^enum\(\'(.*)\'\)$/", $statusTypes, $matches);
+$statuses = explode("','", $matches[1]);
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -27,131 +86,76 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th scope="col">ID заказа</th>
-                    <th scope="col">ID пользователя</th>
-                    <th scope="col">Дата заказа</th>
+                    <th scope="col">Номер Заказа</th>
+                    <th scope="col">Имя Пользователя</th>
+                    <th scope="col">Дата Заказа</th>
                     <th scope="col">Статус</th>
-                    <th scope="col">Общая стоимость</th>
-                    <th scope="col">Использованные бонусы</th>
-                    <th scope="col">Начисленные бонусы</th>
-                    <th scope="col">ID продукта</th>
+                    <th scope="col">Общая Стоимость</th>
+                    <th scope="col">Использованные Бонусы</th>
+                    <th scope="col">Начисленные Бонусы</th>
+                    <th scope="col">Название Продукта</th>
                     <th scope="col">Действия</th>
                 </tr>
             </thead>
             <tbody>
-                <?php
-                $orders = [
-                    ['id' => 1, 'user_id' => 101, 'date' => '2023-04-01', 'status' => 'Оплачено', 'total' => 1500, 'used_bonuses' => 100, 'accrued_bonuses' => 50, 'product_id' => 501],
-                    ['id' => 2, 'user_id' => 102, 'date' => '2023-04-02', 'status' => 'Обработка', 'total' => 2500, 'used_bonuses' => 200, 'accrued_bonuses' => 100, 'product_id' => 502]
-                ];
-                foreach ($orders as $order) {
-                    echo "<tr>
-                            <td>{$order['id']}</td>
-                            <td>{$order['user_id']}</td>
-                            <td>{$order['date']}</td>
-                            <td>{$order['status']}</td>
-                            <td>{$order['total']}</td>
-                            <td>{$order['used_bonuses']}</td>
-                            <td>{$order['accrued_bonuses']}</td>
-                            <td>{$order['product_id']}</td>
-                            <td>
-                                <button class='btn btn-edit action-btn' data-bs-toggle='modal' data-bs-target='#editOrderModal-{$order['id']}'>Изменить</button>
-                                <button class='btn btn-delete'>Удаление</button>
-                            </td>
-                          </tr>";
-                }
-                ?>
-            </tbody>
-        </table>
+    <?php while ($row = $result->fetch_assoc()): ?>
+        <tr>
+            <td><?= htmlspecialchars($row['Id_order']) ?></td>
+            <td><?= htmlspecialchars($row['UserName']) ?></td>
+            <td><?= htmlspecialchars(date('d.m.Y', strtotime($row['Date_of_order']))) ?></td>
+            <td>
+                <span class="badge <?= $row['Status'] === 'Отменен' ? 'bg-danger' : 'bg-success' ?>">
+                    <?= htmlspecialchars($row['Status']) ?>
+                </span>
+            </td>
+            <td><?= htmlspecialchars(number_format($row['Total_price'], 2, '.', ' ')) ?> р</td>
+            <td><?= htmlspecialchars($row['Used_bonuses']) ?></td>
+            <td><?= htmlspecialchars($row['Accrued_bonuses']) ?></td>
+            <td><?= htmlspecialchars($row['ProductNames']) ?></td>
+            <td>
+                <button class='btn btn-edit' data-bs-toggle='modal' data-bs-target='#editOrderModal-<?= $row['Id_order'] ?>'>Изменить</button>
+                <form method="POST" action="" style="display: inline-block;">
+                                <input type="hidden" name="order_id" value="<?= $row['Id_order'] ?>">
+                                <button type="submit" name="delete_order" class="btn btn-delete">Удалить</button>
+                </form>
 
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addOrderModal">
-            Добавить заказ
-        </button>
-
-        <!-- Модальное окно для добавления заказа -->
-        <div class="modal fade" id="addOrderModal" tabindex="-1" aria-labelledby="addOrderModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="addOrderModalLabel">Добавление нового заказа</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <!-- Форма для добавления нового заказа -->
-                            <div class="mb-3">
-                                <label for="userId" class="form-label">ID пользователя</label>
-                                <input type="number" class="form-control" id="userId">
+                <!-- Модальное окно для редактирования заказа -->
+                <div class="modal fade" id="editOrderModal-<?= $row['Id_order'] ?>" tabindex="-1" aria-labelledby="editOrderModalLabel-<?= $row['Id_order'] ?>" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editOrderModalLabel-<?= $row['Id_order'] ?>">Редактирование заказа #<?= $row['Id_order'] ?></h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <div class="mb-3">
-                                <label for="orderDate" class="form-label">Дата заказа</label>
-                                <input type="date" class="form-control" id="orderDate">
+                            <div class="modal-body">
+                                <form method="POST" action="">
+                                    <input type="hidden" name="order_id" value="<?= $row['Id_order'] ?>">
+                                    <div class="mb-3">
+                                        <label for="orderStatus-<?= $row['Id_order'] ?>" class="form-label">Статус заказа</label>
+                                        <select class="form-control" id="orderStatus-<?= $row['Id_order'] ?>" name="new_status">
+                                            <?php foreach ($statuses as $status): ?>
+                                                <option value="<?= $status ?>" <?= $row['Status'] == $status ? 'selected' : '' ?>>
+                                                    <?= $status ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                                        <button type="submit" class="btn btn-primary" name="edit_status">Сохранить изменения</button>
+                                    </div>
+                                </form>
                             </div>
-                            <div class="mb-3">
-                                <label for="orderStatus" class="form-label">Статус заказа</label>
-                                <select class="form-control" id="orderStatus">
-                                    <option>Обработка</option>
-                                    <option>Оплачено</option>
-                                    <option>Отменено</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="totalPrice" class="form-label">Общая стоимость</label>
-                                <input type="number" class="form-control" id="totalPrice">
-                            </div>
-                            <div class="mb-3">
-                                <label for="usedBonuses" class="form-label">Использованные бонусы</label>
-                                <input type="number" class="form-control" id="usedBonuses">
-                            </div>
-                            <div class="mb-3">
-                                <label for="accruedBonuses" class="form-label">Начисленные бонусы</label>
-                                <input type="number" class="form-control" id="accruedBonuses">
-                            </div>
-                            <div class="mb-3">
-                                <label for="productId" class="form-label">ID продукта</label>
-                                <input type="number" class="form-control" id="productId">
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                        <button type="button" class="btn btn-primary">Сохранить заказ</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </td>
+        </tr>
+    <?php endwhile; ?>
 
-        <!-- Модальное окно для редактирования заказа (пример для заказа с ID=1) -->
-        <div class="modal fade" id="editOrderModal-1" tabindex="-1" aria-labelledby="editOrderModalLabel-1" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="editOrderModalLabel-1">Редактирование заказа</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <!-- Поля формы могут быть автоматически заполнены текущими значениями заказа -->
-                            <div class="mb-3">
-                                <label for="orderStatus-1" class="form-label">Статус заказа</label>
-                                <select class="form-control" id="orderStatus-1">
-                                    <option>Обработка</option>
-                                    <option selected>Оплачено</option>
-                                    <option>Отменено</option>
-                                </select>
-                            </div>
-                            <!-- Другие поля... -->
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                        <button type="button" class="btn btn-primary">Сохранить изменения</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+    
 
+</tbody>
 
-    </div>
 </body>
 </html>

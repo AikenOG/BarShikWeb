@@ -14,5 +14,8 @@ $categoryAdminPath = $baseUrl . 'category/category_admin.php';
 // Путь к управлению заказами
 $orderAdminPath = $baseUrl . 'orders/order_admin.php';
 
+// Путь к личному кабинету 
+$OwnCabinet = $mainUrl . 'user/personal_cab.php';
+
 $indexpath = $mainUrl . 'index.php'
 ?>
