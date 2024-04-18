@@ -13,7 +13,7 @@ session_start(); // Необходимо начать сессию, чтобы �
                 <a href="http://barshikweb/user/cart/personal_cart.php" class="custom-btn">Корзина</a>
                 <a href="#footer" class="custom-btn">Контакты</a>
                 <?php if(isset($_SESSION['user_id'])): ?>
-                    <a href="http://barshikweb/user/check_auth.php" class="custom-btn-login">Профиль</a>
+                    <a href="http://barshikweb/user/auth/check_auth.php" class="custom-btn-login">Профиль</a>
                 <?php else: ?>
                     <a href="http://barshikweb/user/auth/auth.php" class="custom-btn-login">Войти</a>
                 <?php endif; ?>

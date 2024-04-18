@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:1336
--- Время создания: Апр 05 2024 г., 13:08
+-- Время создания: Апр 19 2024 г., 00:19
 -- Версия сервера: 8.0.30
 -- Версия PHP: 8.1.9
 
@@ -30,7 +30,8 @@ SET time_zone = "+00:00";
 CREATE TABLE `Basket` (
   `Id_basket` int NOT NULL,
   `User_id` int NOT NULL,
-  `Content` json NOT NULL
+  `id_product` int NOT NULL,
+  `count` int DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -44,6 +45,18 @@ CREATE TABLE `Category` (
   `Name` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Дамп данных таблицы `Category`
+--
+
+INSERT INTO `Category` (`Category_id`, `Name`) VALUES
+(1, 'Сок'),
+(2, 'Кофе'),
+(3, 'Газированные напитки'),
+(4, 'Молочные напитки'),
+(5, 'Вода'),
+(6, 'Детские напитки');
+
 -- --------------------------------------------------------
 
 --
@@ -54,12 +67,20 @@ CREATE TABLE `Orders` (
   `Id_order` int NOT NULL,
   `User_id` int NOT NULL,
   `Date_of_order` datetime NOT NULL,
-  `Status` varchar(50) NOT NULL,
+  `Status` enum('Обработка','Доставляется','Отменен') NOT NULL,
   `Total_price` decimal(25,0) NOT NULL,
   `Used_bonuses` decimal(10,0) DEFAULT NULL,
   `Accrued_bonuses` decimal(10,0) DEFAULT NULL,
-  `Id_product` int NOT NULL
+  `Delivery_address` varchar(255) DEFAULT NULL,
+  `Delivery_method` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Дамп данных таблицы `Orders`
+--
+
+INSERT INTO `Orders` (`Id_order`, `User_id`, `Date_of_order`, `Status`, `Total_price`, `Used_bonuses`, `Accrued_bonuses`, `Delivery_address`, `Delivery_method`) VALUES
+(4, 9, '2024-04-18 22:25:03', 'Доставляется', '567', '193', '28', 'Уфа, Уксивт, Пункт выдачи заказов.', 'pickup');
 
 -- --------------------------------------------------------
 
@@ -69,10 +90,17 @@ CREATE TABLE `Orders` (
 
 CREATE TABLE `Order_Product` (
   `id` int NOT NULL,
-  `Id_product` int NOT NULL,
   `Id_order` int NOT NULL,
+  `Id_product` int NOT NULL,
   `count` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Дамп данных таблицы `Order_Product`
+--
+
+INSERT INTO `Order_Product` (`id`, `Id_order`, `Id_product`, `count`) VALUES
+(7, 4, 10, 4);
 
 -- --------------------------------------------------------
 
@@ -86,30 +114,56 @@ CREATE TABLE `Product` (
   `Description` text NOT NULL,
   `Category_id` int NOT NULL,
   `Price` decimal(10,0) NOT NULL,
-  `Image` varchar(50) NOT NULL
+  `Image` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Дамп данных таблицы `Product`
+--
+
+INSERT INTO `Product` (`Id_product`, `Name`, `Description`, `Category_id`, `Price`, `Image`) VALUES
+(4, 'Лимонад Шихан', 'Освежающий лимонад с натуральным лимонным соком\r\n', 3, '50', 'http://avatars.mds.yandex.net/get-mpic/5234219/img_id6162136631165449300.jpeg/orig'),
+(9, 'Набор \"Водяной\"', 'В набор входят:\r\nNestea Ice Tea 0.5л | Экстракт: Персик\r\nFanta 0.33мл | Экстракт: Апельсин\r\nFanta 1л | Экстракт: Апельсин\r\nCoca Cola 1л | Экстракт: Кока\r\nSprite 1л | Экстракт: Лайм\r\nSprite 0.33мл | Экстракт: Лайм\r\nNestea 0.5л | Экстракт: Цитрус', 3, '1495', 'https://tatdeno.ru/wp-content/uploads/2023/05/1665878457_1-podacha-blud-com-p-vrednie-napitki-krasivie-foto-1.png'),
+(10, 'Coca Cola', 'Classic Coca Cola.\r\nОбъем 0.5\r\nЭкспорт из Турции', 3, '190', 'https://jamierubin.net/wp-content/uploads/2021/12/pexels-photo-2668310.jpeg'),
+(12, 'Красный ключ', 'Водная вода', 5, '215', 'https://reafond.ru/wp-content/uploads/2019/07/WhatsApp-Image-2019-07-08-at-15.37.49.jpeg');
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `Reviews`
+--
+
+CREATE TABLE `Reviews` (
+  `review_id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `id_product` int NOT NULL,
+  `review_text` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `rating` int NOT NULL,
+  `review_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `Users`
+-- Структура таблицы `users`
 --
 
-CREATE TABLE `Users` (
+CREATE TABLE `users` (
   `User_id` int NOT NULL,
   `Email` varchar(50) NOT NULL,
-  `Password_hash` varchar(50) NOT NULL,
-  `Bonus_points` decimal(10,0) NOT NULL
+  `Password_hash` varchar(255) NOT NULL,
+  `Bonus_points` decimal(10,0) NOT NULL,
+  `role` enum('admin','user') NOT NULL DEFAULT 'user',
+  `contact_info` varchar(255) NOT NULL DEFAULT 'Данных нет.',
+  `name` varchar(33) NOT NULL DEFAULT 'Данных нет.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Дамп данных таблицы `Users`
+-- Дамп данных таблицы `users`
 --
 
-INSERT INTO `Users` (`User_id`, `Email`, `Password_hash`, `Bonus_points`) VALUES
-(6, 'gang@yandex.ru', '1336', '1'),
-(7, 'aiken@mail.ru', '1336', '1'),
-(8, 'VladOZ@gmail.com', '1336', '1');
+INSERT INTO `users` (`User_id`, `Email`, `Password_hash`, `Bonus_points`, `role`, `contact_info`, `name`) VALUES
+(9, 'gang@mail.ru', '$2y$10$ySB62LoH/A/KgECJTxnuCuF8NROxIZOKkJTMkDHiloO0P0YwQlcQK', '331', 'admin', 'Уфа, Комсомольская 15', 'Владос');
 
 --
 -- Индексы сохранённых таблиц
@@ -133,8 +187,7 @@ ALTER TABLE `Category`
 --
 ALTER TABLE `Orders`
   ADD PRIMARY KEY (`Id_order`),
-  ADD KEY `User_id` (`User_id`),
-  ADD KEY `Id_product` (`Id_product`);
+  ADD KEY `User_id` (`User_id`);
 
 --
 -- Индексы таблицы `Order_Product`
@@ -153,9 +206,17 @@ ALTER TABLE `Product`
   ADD KEY `Category_id` (`Category_id`);
 
 --
--- Индексы таблицы `Users`
+-- Индексы таблицы `Reviews`
 --
-ALTER TABLE `Users`
+ALTER TABLE `Reviews`
+  ADD PRIMARY KEY (`review_id`),
+  ADD KEY `User_id` (`user_id`),
+  ADD KEY `Product_id` (`id_product`);
+
+--
+-- Индексы таблицы `users`
+--
+ALTER TABLE `users`
   ADD PRIMARY KEY (`User_id`),
   ADD UNIQUE KEY `Email` (`Email`);
 
@@ -167,37 +228,43 @@ ALTER TABLE `Users`
 -- AUTO_INCREMENT для таблицы `Basket`
 --
 ALTER TABLE `Basket`
-  MODIFY `Id_basket` int NOT NULL AUTO_INCREMENT;
+  MODIFY `Id_basket` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT для таблицы `Category`
 --
 ALTER TABLE `Category`
-  MODIFY `Category_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `Category_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT для таблицы `Orders`
 --
 ALTER TABLE `Orders`
-  MODIFY `Id_order` int NOT NULL AUTO_INCREMENT;
+  MODIFY `Id_order` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT для таблицы `Order_Product`
 --
 ALTER TABLE `Order_Product`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT для таблицы `Product`
 --
 ALTER TABLE `Product`
-  MODIFY `Id_product` int NOT NULL AUTO_INCREMENT;
+  MODIFY `Id_product` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
--- AUTO_INCREMENT для таблицы `Users`
+-- AUTO_INCREMENT для таблицы `Reviews`
 --
-ALTER TABLE `Users`
-  MODIFY `User_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+ALTER TABLE `Reviews`
+  MODIFY `review_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT для таблицы `users`
+--
+ALTER TABLE `users`
+  MODIFY `User_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц
@@ -208,13 +275,6 @@ ALTER TABLE `Users`
 --
 ALTER TABLE `Basket`
   ADD CONSTRAINT `basket_ibfk_1` FOREIGN KEY (`User_id`) REFERENCES `Users` (`User_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Ограничения внешнего ключа таблицы `Orders`
---
-ALTER TABLE `Orders`
-  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`User_id`) REFERENCES `Users` (`User_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`Id_product`) REFERENCES `Product` (`Id_product`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Ограничения внешнего ключа таблицы `Order_Product`
@@ -228,6 +288,13 @@ ALTER TABLE `Order_Product`
 --
 ALTER TABLE `Product`
   ADD CONSTRAINT `product_ibfk_1` FOREIGN KEY (`Category_id`) REFERENCES `Category` (`Category_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Ограничения внешнего ключа таблицы `Reviews`
+--
+ALTER TABLE `Reviews`
+  ADD CONSTRAINT `reviews_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`User_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `reviews_ibfk_2` FOREIGN KEY (`id_product`) REFERENCES `Product` (`Id_product`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

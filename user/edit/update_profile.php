@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../database/connectdb.php';
+include '../../database/connectdb.php';
 
 // Проверяем, авторизован ли пользователь
 if (!isset($_SESSION['user_id'])) {

@@ -9,7 +9,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 // Подключаемся к базе данных
-include "../database/connectdb.php";
+include "../../database/connectdb.php";
 
 // Получаем роль пользователя из базы данных
 $user_id = $_SESSION['user_id']; // Получаем ID пользователя из сессии

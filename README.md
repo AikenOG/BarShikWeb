@@ -12,8 +12,13 @@
 |![Страница входа](https://github.com/AikenOG/BarShikWeb/blob/main/assets/auth.jpg)|![Страница регистрации](https://github.com/AikenOG/BarShikWeb/blob/main/assets/reg.jpg)|
 |*Страница входа*|*Страница регистрации*|
 
-## Личный кабинет пользователя
-|![Личный кабинет](https://github.com/AikenOG/BarShikWeb/blob/main/assets/lichka.jpg)|
+## Корзина и чек пользователя
+|Корзина|Оформление заказа|
+|:--:|:--:|:--:|
+|![Корзина](https://github.com/AikenOG/BarShikWeb/blob/main/assets/cart.jpg)<br>*Страница корзины*<br>![Оформление](https://github.com/AikenOG/BarShikWeb/blob/main/assets/check.jpg)<br>*Страница оформления заказа*|
+
+## Корзина и чек пользователя
+|![Корзина](https://github.com/AikenOG/BarShikWeb/blob/main/assets/lichka.jpg)|
 |:--:|
 |*Личный кабинет пользователя*|
 
@@ -26,9 +31,13 @@
 
 ### Дополнительные функции админ панели
 |Управление категориями|Страница категорий|
-|:--:|:--:|
+|:--:|:--:|:--:|
 |![Добавление категории](https://github.com/AikenOG/BarShikWeb/blob/main/assets/add_categ.jpg)<br>*Добавление категорий*<br>![Редактирование категории](https://github.com/AikenOG/BarShikWeb/blob/main/assets/edit_categ.jpg)<br>*Редактирование категорий*|![Страница работы с категориями](https://github.com/AikenOG/BarShikWeb/blob/main/assets/category.jpg)<br>*Страница категорий*|
 
+### Дополнительные функции админ панели
+|Управление заказами|Изменение статуса заказа|
+|:--:|:--:|:--:|
+|![Страница управления заказами](https://github.com/AikenOG/BarShikWeb/blob/main/assets/edit_orders.jpg)<br>*Страница заказов*<br>![Изменение статуса](https://github.com/AikenOG/BarShikWeb/blob/main/assets/edit_status.jpg)<br>*Изменение статуса заказа*|
 
 ## Структура базы данных
 |Таблица пользователей|Таблица продуктов|Таблица категорий|Таблица корзины|

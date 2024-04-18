@@ -88,7 +88,7 @@ $orderResult = $orderStmt->get_result();
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <h5 class="card-title mb-4">Редактирование профиля</h5>
-                        <form action="update_profile.php" method="post">
+                        <form action="../user/edit/update_profile.php" method="post">
                             <div class="mb-3">
                                 <label for="userName" class="form-label">Имя</label>
                                 <input type="text" id="userName" name="userName" class="form-control" placeholder="Введите ваше имя" value="<?= htmlspecialchars($userData['name']) ?>">
@@ -131,11 +131,9 @@ $orderResult = $orderStmt->get_result();
                                     <td>Заказ #<?= htmlspecialchars($row['Id_order']) ?></td>
                                     <td><?= date('d.m.Y', strtotime($row['Date_of_order'])) ?></td>
                                     <td>
-                                        <ul class="list-unstyled">
                                         <?php foreach (explode(', ', $row['Products']) as $product): ?>
                                             <li><?= htmlspecialchars($product) ?></li>
                                         <?php endforeach; ?>
-                                        </ul>
                                     </td>
                                     <td><?= number_format($row['Total_price'], 2, '.', ' ') ?> р</td>
                                     <td>
@@ -147,7 +145,7 @@ $orderResult = $orderStmt->get_result();
                                         <?php endif; ?>
                                     </td>
                                     <td>
-                                        <a href="#" data-bs-toggle="modal" data-bs-target="#feedback">
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#feedback" data-product-id="<?= $productId ?>" onclick="setProductId(this.getAttribute('data-product-id'))">
                                             <img src="../../design/img/writing.png" alt="Write feedback" class="img-fluid" style="width: 24px; height: 24px;">
                                         </a>
                                     </td>
@@ -179,30 +177,49 @@ $orderResult = $orderStmt->get_result();
         <p class="copirater">© 2023 Копирование запрещено. Все права защищены.</p> 
     </div>
 </footer>
-    <div class="modal fade" id="feedback" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Оставьте отзыв</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="mb-3">
-                            <label for="message-text" class="col-form-label">Сообщение:</label>
-                            <textarea class="form-control" id="message-text"></textarea>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary">Оставить отзыв</button>
-                </div>
+<div class="modal fade" id="feedback" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Оставьте отзыв</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Форма обновлена для отправки данных на сервер -->
+                <form method="post" action="../user/review/send_review.php">
+                    <!-- Добавлено скрытое поле для ID продукта -->
+                    <input type="hidden" id="id_product" name="id_product" value="">
+                    <div class="mb-3">
+                        <label for="review_text" class="col-form-label">Сообщение:</label>
+                        <textarea class="form-control" id="review_text" name="review_text" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="rating" class="col-form-label">Оценка:</label>
+                        <select class="form-control" id="rating" name="rating">
+                            <option value="1">1 - Очень плохо</option>
+                            <option value="2">2 - Плохо</option>
+                            <option value="3">3 - Нормально</option>
+                            <option value="4">4 - Хорошо</option>
+                            <option value="5" selected>5 - Отлично</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                        <!-- Кнопка для отправки формы -->
+                        <button type="submit" class="btn btn-primary">Оставить отзыв</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-    <script>
-        // Здесь можно добавить JavaScript, если нужно
-    </script>
+</div>
+
+<script>
+    function setProductId(productId) {
+        document.getElementById('id_product').value = productId;
+    }
+</script>
+
 </body>
 </html>
 
