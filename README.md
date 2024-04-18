@@ -31,7 +31,7 @@
 
 ### Дополнительные функции админ панели
 |Управление заказами|Изменение статуса заказа|
-|:--:|:--:|:--:|
+|:--:|:--:|
 |![Страница управления заказами](https://github.com/AikenOG/BarShikWeb/blob/main/assets/edit_orders.jpg)<br>*Страница заказов*<br>![Изменение статуса](https://github.com/AikenOG/BarShikWeb/blob/main/assets/edit_status.jpg)<br>*Изменение статуса заказа*|
 
 ## Структура базы данных
