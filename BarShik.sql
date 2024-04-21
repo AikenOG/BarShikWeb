@@ -2,8 +2,8 @@
 -- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Хост: 127.0.0.1:1336
--- Время создания: Апр 19 2024 г., 00:19
+-- Хост: 127.0.0.1:3306
+-- Время создания: Апр 21 2024 г., 15:40
 -- Версия сервера: 8.0.30
 -- Версия PHP: 8.1.9
 
@@ -80,7 +80,9 @@ CREATE TABLE `Orders` (
 --
 
 INSERT INTO `Orders` (`Id_order`, `User_id`, `Date_of_order`, `Status`, `Total_price`, `Used_bonuses`, `Accrued_bonuses`, `Delivery_address`, `Delivery_method`) VALUES
-(4, 9, '2024-04-18 22:25:03', 'Доставляется', '567', '193', '28', 'Уфа, Уксивт, Пункт выдачи заказов.', 'pickup');
+(4, 9, '2024-04-18 22:25:03', 'Обработка', '567', '193', '28', 'Уфа, Уксивт, Пункт выдачи заказов.', 'pickup'),
+(7, 9, '2024-04-21 15:09:09', 'Обработка', '1454', '331', '73', 'Уфа, Уксивт, Пункт выдачи заказов.', 'pickup'),
+(8, 9, '2024-04-21 15:20:46', 'Обработка', '151', '65', '8', 'Уфа, Уксивт, Пункт выдачи заказов.', 'pickup');
 
 -- --------------------------------------------------------
 
@@ -100,7 +102,11 @@ CREATE TABLE `Order_Product` (
 --
 
 INSERT INTO `Order_Product` (`id`, `Id_order`, `Id_product`, `count`) VALUES
-(7, 4, 10, 4);
+(7, 4, 10, 4),
+(11, 7, 9, 1),
+(12, 7, 4, 2),
+(13, 7, 10, 1),
+(14, 8, 12, 1);
 
 -- --------------------------------------------------------
 
@@ -142,6 +148,16 @@ CREATE TABLE `Reviews` (
   `review_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Дамп данных таблицы `Reviews`
+--
+
+INSERT INTO `Reviews` (`review_id`, `user_id`, `id_product`, `review_text`, `rating`, `review_date`) VALUES
+(17, 9, 10, 'Хороший товар', 5, '2024-04-21 15:08:36'),
+(18, 9, 4, 'Напиток богов', 5, '2024-04-21 15:20:03'),
+(19, 9, 9, 'гуд', 5, '2024-04-21 15:20:13'),
+(20, 9, 12, 'Пойдет', 5, '2024-04-21 15:20:51');
+
 -- --------------------------------------------------------
 
 --
@@ -163,7 +179,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`User_id`, `Email`, `Password_hash`, `Bonus_points`, `role`, `contact_info`, `name`) VALUES
-(9, 'gang@mail.ru', '$2y$10$ySB62LoH/A/KgECJTxnuCuF8NROxIZOKkJTMkDHiloO0P0YwQlcQK', '331', 'admin', 'Уфа, Комсомольская 15', 'Владос');
+(9, 'gang@mail.ru', '$2y$10$ySB62LoH/A/KgECJTxnuCuF8NROxIZOKkJTMkDHiloO0P0YwQlcQK', '16', 'admin', 'Уфа, Комсомольская 15', 'Владос');
 
 --
 -- Индексы сохранённых таблиц
@@ -228,7 +244,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT для таблицы `Basket`
 --
 ALTER TABLE `Basket`
-  MODIFY `Id_basket` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `Id_basket` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT для таблицы `Category`
@@ -240,13 +256,13 @@ ALTER TABLE `Category`
 -- AUTO_INCREMENT для таблицы `Orders`
 --
 ALTER TABLE `Orders`
-  MODIFY `Id_order` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `Id_order` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT для таблицы `Order_Product`
 --
 ALTER TABLE `Order_Product`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT для таблицы `Product`
@@ -258,7 +274,7 @@ ALTER TABLE `Product`
 -- AUTO_INCREMENT для таблицы `Reviews`
 --
 ALTER TABLE `Reviews`
-  MODIFY `review_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `review_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT для таблицы `users`
