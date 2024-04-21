@@ -1,9 +1,9 @@
 # Описание проекта
 
 ## Главная страница
-|![Главная страница](https://github.com/AikenOG/BarShikWeb/blob/main/assets/main.jpg)|![Товары из выбранной категории](https://github.com/AikenOG/BarShikWeb/blob/main/assets/choosed_products.jpg)|
+|![Главная страница](https://github.com/AikenOG/BarShikWeb/blob/main/assets/main.jpg)|![Товары из выбранной категории](https://github.com/AikenOG/BarShikWeb/blob/main/assets/choosed_products.jpg)|![Отзывы о товарах](https://github.com/AikenOG/BarShikWeb/blob/main/assets/reviews.jpg)|
 |:--:|:--:|
-|*Главная страница сайта*|*Товары из выбранной категории*|
+|*Главная страница сайта*|*Товары из выбранной категории*|*Отзывы*|
 
 
 ## Вход и регистрация
@@ -30,6 +30,6 @@
 |![Добавление категории](https://github.com/AikenOG/BarShikWeb/blob/main/assets/add_categ.jpg)<br>*Добавление категорий*<br>![Редактирование категории](https://github.com/AikenOG/BarShikWeb/blob/main/assets/edit_categ.jpg)<br>*Редактирование категорий*|![Страница работы с категориями](https://github.com/AikenOG/BarShikWeb/blob/main/assets/category.jpg)<br>*Страница категорий*|
 
 ### Дополнительные функции админ панели
-|Управление заказами|
+|Управление заказами и статистика|
 |:--:|
-|![Страница управления заказами](https://github.com/AikenOG/BarShikWeb/blob/main/assets/edit_orders.jpg)<br>*Страница заказов*<br>![Изменение статуса](https://github.com/AikenOG/BarShikWeb/blob/main/assets/edit_status.jpg)<br>*Изменение статуса заказа*|
+|![Страница управления заказами](https://github.com/AikenOG/BarShikWeb/blob/main/assets/edit_orders.jpg)<br>*Страница заказов*<br>![Изменение статуса](https://github.com/AikenOG/BarShikWeb/blob/main/assets/edit_status.jpg)<br>*Изменение статуса заказа*![Изменение статуса](https://github.com/AikenOG/BarShikWeb/blob/main/assets/statistic.jpg)<br>*Статистика по сайту*|

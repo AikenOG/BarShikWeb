@@ -143,7 +143,7 @@ $reviewCheckStmt = $mysqli->prepare($reviewCheckQuery);
             foreach ($products as $product):
                 $productDetails = explode(' (', rtrim($product, ')'));
                 $productName = $productDetails[0];
-                $productId = $productDetails[1] ?? 'Неизвестный ID'; // Предоставляем значение по умолчанию в случае отсутствия ID
+                $productId = $productDetails[1] ?? 'Неизвестный ID'; 
             ?>
                 <li><?= htmlspecialchars($productName) ?></li>
             <?php endforeach; ?>

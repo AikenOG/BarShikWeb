@@ -17,5 +17,8 @@ $orderAdminPath = $baseUrl . 'orders/order_admin.php';
 // Путь к личному кабинету 
 $OwnCabinet = $mainUrl . 'user/personal_cab.php';
 
+// Путь к статистике админ панели
+$statistic = $baseUrl . 'statistic/statistic.php';
+
 $indexpath = $mainUrl . 'index.php'
 ?>
