@@ -28,6 +28,21 @@ while ($product = $productResult->fetch_assoc()) {
     $productsByCategory[$product['Category_id']][] = $product;
 }
 
+$reviewQuery = "SELECT r.review_text, r.rating, p.Name AS product_name, u.name AS user_name
+                FROM Reviews r
+                JOIN users u ON r.user_id = u.User_id
+                JOIN Product p ON r.id_product = p.Id_product
+                ORDER BY r.review_date DESC 
+                LIMIT 3";  // Ограничиваем запрос тремя последними записями
+$reviewResult = $mysqli->query($reviewQuery);
+
+if (!$reviewResult) {
+    echo "Ошибка при получении отзывов: " . $mysqli->error;
+    $mysqli->close();
+    exit;
+}
+$reviews = $reviewResult->fetch_all(MYSQLI_ASSOC);
+
 $mysqli->close();
 ?>
 
@@ -114,43 +129,25 @@ $mysqli->close();
 <div class="reviews">
     <h2 class="text-reviews">Отзывы</h2>
     <div class="slider">
-    <div class="slide">
-        <div class="otzv">
-            <img class= "user-img" src="design\img\free-icon-boy-4537069.png" alt="">
-            <p>Отличный кофе! Очень ароматный и насыщенный вкус. Упаковка красивая и удобная. Я очень доволен покупкой и 
-            с удовольствием буду заказывать этот кофе снова. Рекомендую всем любителям кофе!</p>
-        </div>
-        <div class="otzv">
-            <img class= "user-img" src="design\img\free-icon-boy-4537069.png" alt="">
-            <p>Заказываю через это приложение не первый раз. 
-                Товарами доволен и доставка быстрая.Рекомендую!</p>
-        </div>
-        <div class="otzv">
-            <img class= "user-img" src="design\img\free-icon-boy-4537069.png" alt="">
-            <p>Отличный кофе! Очень ароматный и насыщенный вкус. Упаковка красивая и удобная. Я очень доволен покупкой и 
-            с удовольствием буду заказывать этот кофе снова. Рекомендую всем любителям кофе!</p>
-        </div>
+        <?php if (empty($reviews)): ?>
+            <div class="slide">
+                <p class="no-reviews">Отзывов нету</p>
+            </div>
+        <?php else: ?>
+            <div class="slide">
+                <?php foreach ($reviews as $review): ?>
+                    <div class="otzv">
+                        <img class="user-img" src="design/img/free-icon-boy-4537069.png" alt="">
+                        <h4><?= htmlspecialchars($review['product_name']); ?></h4> <!-- Название продукта -->
+                        <p><?= htmlspecialchars($review['review_text']); ?></p>
+                        <p><strong>Оценка:</strong> <?= $review['rating']; ?>/5</p>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
     </div>
-    <div class="slide">
-    <div class="otzv">
-            <img class= "user-img" src="design\img\free-icon-boy-4537069.png" alt="">
-            <p>Очень ароматный и насыщенный вкус. Упаковка красивая и удобная. Я очень доволен покупкой и 
-            с удовольствием буду заказывать этот кофе снова. Рекомендую всем любителям кофе!</p>
-        </div>
-        <div class="otzv">
-            <img class= "user-img" src="design\img\free-icon-boy-4537069.png" alt="">
-            <p>Заказываю через это приложение не первый раз. 
-                Товарами доволен и доставка быстрая.Рекомендую!</p>
-        </div>
-        <div class="otzv">
-            <img class= "user-img" src="design\img\free-icon-boy-4537069.png" alt="">
-            <p>Отличный кофе! Очень ароматный и насыщенный вкус. Упаковка красивая и удобная. Я очень доволен покупкой и 
-            с удовольствием буду заказывать этот кофе снова. Рекомендую всем любителям кофе!</p>
-        </div>
-    </div>
-    </div>
-
 </div>
+
 
 </main>
     <!-- подвал -->

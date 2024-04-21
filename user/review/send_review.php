@@ -16,15 +16,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $errors = [];
     if (empty($productId)) {
         $errors[] = "ID продукта";
+    } else {
+        // Проверка существования ID продукта в базе данных
+        $productCheck = $mysqli->prepare("SELECT * FROM Product WHERE Id_product = ?");
+        $productCheck->bind_param("i", $productId);
+        $productCheck->execute();
+        $result = $productCheck->get_result();
+        if ($result->num_rows === 0) {
+            $errors[] = "ID продукта не существует";
+        }
+        $productCheck->close();
     }
     if (empty($reviewText)) {
         $errors[] = "Текст отзыва";
     }
     if (empty($rating)) {
         $errors[] = "Рейтинг";
-    }
-
-    if ($rating < 1 || $rating > 5) {
+    } else if ($rating < 1 || $rating > 5) {
         $errors[] = "Рейтинг должен быть числом от 1 до 5";
     }
 
@@ -34,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Подготовка запроса на вставку отзыва
-    $stmt = $mysqli->prepare("INSERT INTO Reviews (user_id, id_product, review_text, rating) VALUES (?, ?, ?, ?)");
+    $stmt = $mysqli->prepare("INSERT INTO Reviews (user_id, id_product, review_text, rating, review_date) VALUES (?, ?, ?, ?, NOW())");
     $stmt->bind_param("iisi", $userId, $productId, $reviewText, $rating);
 
     if ($stmt->execute()) {

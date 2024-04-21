@@ -19,14 +19,17 @@ $userStmt->bind_param("i", $userId);
 $userStmt->execute();
 $userResult = $userStmt->get_result();
 $userData = $userResult->fetch_assoc();
+$userStmt->close();
 
 if (!$userData) {
     echo 'Данные пользователя не найдены.';
+    $mysqli->close();
     exit;
 }
 
 // Запрос на получение заказов пользователя
-$orderQuery = "SELECT o.Id_order, o.Date_of_order, o.Total_price, o.Status, GROUP_CONCAT(p.Name ORDER BY p.Name SEPARATOR ', ') AS Products
+$orderQuery = "SELECT o.Id_order, o.Date_of_order, o.Total_price, o.Status, 
+                      GROUP_CONCAT(CONCAT(p.Name, ' (', p.Id_product, ')') ORDER BY p.Name SEPARATOR ', ') AS Products
                FROM Orders o
                JOIN Order_Product op ON o.Id_order = op.Id_order
                JOIN Product p ON op.Id_product = p.Id_product
@@ -37,6 +40,10 @@ $orderStmt = $mysqli->prepare($orderQuery);
 $orderStmt->bind_param("i", $userId);
 $orderStmt->execute();
 $orderResult = $orderStmt->get_result();
+
+// Подготовка запроса на проверку существующих отзывов
+$reviewCheckQuery = "SELECT id_product FROM Reviews WHERE user_id = ? AND id_product = ?";
+$reviewCheckStmt = $mysqli->prepare($reviewCheckQuery);
 
 ?>
 
@@ -126,31 +133,53 @@ $orderResult = $orderStmt->get_result();
                             </tr>
                         </thead>
                         <tbody>
-                            <?php while ($row = $orderResult->fetch_assoc()): ?>
-                                <tr>
-                                    <td>Заказ #<?= htmlspecialchars($row['Id_order']) ?></td>
-                                    <td><?= date('d.m.Y', strtotime($row['Date_of_order'])) ?></td>
-                                    <td>
-                                        <?php foreach (explode(', ', $row['Products']) as $product): ?>
-                                            <li><?= htmlspecialchars($product) ?></li>
-                                        <?php endforeach; ?>
-                                    </td>
-                                    <td><?= number_format($row['Total_price'], 2, '.', ' ') ?> р</td>
-                                    <td>
-                                        <!-- Применяем соответствующий класс в зависимости от статуса -->
-                                        <?php if ($row['Status'] == 'Отменен'): ?>
-                                            <span class="badge bg-danger"><?= htmlspecialchars($row['Status']) ?></span>
-                                        <?php else: ?>
-                                            <span class="badge bg-success"><?= htmlspecialchars($row['Status']) ?></span>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <a href="#" data-bs-toggle="modal" data-bs-target="#feedback" data-product-id="<?= $productId ?>" onclick="setProductId(this.getAttribute('data-product-id'))">
-                                            <img src="../../design/img/writing.png" alt="Write feedback" class="img-fluid" style="width: 24px; height: 24px;">
-                                        </a>
-                                    </td>
-                                </tr>
-                            <?php endwhile; ?>
+                        <?php while ($row = $orderResult->fetch_assoc()): ?>
+    <tr>
+        <td>Заказ #<?= htmlspecialchars($row['Id_order']) ?></td>
+        <td><?= date('d.m.Y', strtotime($row['Date_of_order'])) ?></td>
+        <td>
+            <?php
+            $products = explode(', ', $row['Products']);
+            foreach ($products as $product):
+                $productDetails = explode(' (', rtrim($product, ')'));
+                $productName = $productDetails[0];
+                $productId = $productDetails[1] ?? 'Неизвестный ID'; // Предоставляем значение по умолчанию в случае отсутствия ID
+            ?>
+                <li><?= htmlspecialchars($productName) ?></li>
+            <?php endforeach; ?>
+        </td>
+        <td><?= number_format($row['Total_price'], 2, '.', ' ') ?> р</td>
+        <td>
+            <?php if ($row['Status'] == 'Отменен'): ?>
+                <span class="badge bg-danger"><?= htmlspecialchars($row['Status']) ?></span>
+            <?php else: ?>
+                <span class="badge bg-success"><?= htmlspecialchars($row['Status']) ?></span>
+            <?php endif; ?>
+        </td>
+        <td>
+            <?php 
+            foreach ($products as $product):
+                $productDetails = explode(' (', rtrim($product, ')'));
+                $productName = $productDetails[0];
+                $productId = $productDetails[1] ?? 'Неизвестный ID';
+
+                // Проверяем, оставил ли пользователь отзыв на этот продукт
+                $reviewCheckStmt->bind_param("ii", $userId, $productId);
+                $reviewCheckStmt->execute();
+                $reviewExists = $reviewCheckStmt->get_result()->num_rows > 0;
+
+                if (!$reviewExists):
+            ?>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#feedback" data-product-id="<?= $productId ?>" onclick="setProductId(this.getAttribute('data-product-id'))">
+                        <img src="../../design/img/writing.png" alt="Write feedback" class="img-fluid" style="width: 24px; height: 24px;">
+                    </a>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </td>
+    </tr>
+    <?php endwhile; ?>
+
+
                         </tbody>
                     </table>
                 </div>
