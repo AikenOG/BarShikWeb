@@ -2,7 +2,7 @@
 
 ## Главная страница
 |![Главная страница](https://github.com/AikenOG/BarShikWeb/blob/main/assets/main.jpg)|![Товары из выбранной категории](https://github.com/AikenOG/BarShikWeb/blob/main/assets/choosed_products.jpg)|![Отзывы о товарах](https://github.com/AikenOG/BarShikWeb/blob/main/assets/reviews.jpg)|
-|:--:|:--:|
+|:--:|:--:|:--:|
 |*Главная страница сайта*|*Товары из выбранной категории*|*Отзывы*|
 
 
