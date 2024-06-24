@@ -1,7 +1,7 @@
 <?php
 $host = 'localhost'; // Адрес сервера
 $username = 'root'; // Имя пользователя
-    $password = ''; // Пароль
+$password = 'root'; // Пароль
 $dbname = 'BarShik'; // Имя базы данных
 
 $mysqli = new mysqli($host, $username, $password, $dbname);

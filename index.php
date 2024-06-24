@@ -1,7 +1,7 @@
 <?php 
-session_start(); // Важно: session_start() должен быть в начале скрипта перед выводом любого содержимого.
+session_start();
 
-include 'database/connectdb.php'; // Подключение к базе данных
+include 'database/connectdb.php';
 
 // Проверка, авторизован ли пользователь
 if (isset($_SESSION['user_id'])) {

@@ -26,7 +26,7 @@ if ($stmt->num_rows == 1) {
         if ($role === 'admin') {
             header('Location: ../../admin/index_admin.php');
         } elseif ($role === 'user') {
-            header('Location: ../../user/personal-cab.php');
+            header('Location: ../../user/personal_cab.php');
         }
     } else {
         die('Неверный пароль');

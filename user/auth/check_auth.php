@@ -25,7 +25,7 @@ if ($role === 'admin') {
     header('Location: ../../admin/index_admin.php');
 } elseif ($role === 'user') {
     // Если пользователь - обычный пользователь, перенаправляем на его личный кабинет
-    header('Location: personal_cab.php');
+    header('Location: user\personal_cab.php');
 } else {
     // В случае, если роль не определена, выводим ошибку
     die('Ошибка: Роль пользователя не определена');

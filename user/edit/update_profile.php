@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Выполнение запроса
     if ($updateStmt->execute()) {
         // Редирект на страницу личного кабинета
-        header('Location: personal_cab.php');
+        header('Location: ../personal_cab.php');
         exit;
     } else {
         echo "Ошибка при обновлении данных: " . $updateStmt->error;

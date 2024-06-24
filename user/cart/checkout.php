@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// Подключаемся к базе данных
 include '../../database/connectdb.php';
 
 // Проверяем, авторизован ли пользователь

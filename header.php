@@ -1,5 +1,5 @@
 <?php
-session_start(); // Необходимо начать сессию, чтобы использовать переменные сессии
+session_start();
 ?>
 <header content="width=device-width, initial-scale=1">
     <div class="container">

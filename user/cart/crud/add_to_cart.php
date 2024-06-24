@@ -1,5 +1,5 @@
 <?php
-include '../../../database/connectdb.php'; // Подключение к базе данных
+include '../../../database/connectdb.php';
 
 header('Content-Type: application/json'); // Указываем, что ответ будет в JSON формате
 

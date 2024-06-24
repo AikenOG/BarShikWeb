@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// Подключаемся к базе данных
 include '../database/connectdb.php';
 
 // Проверяем, авторизован ли пользователь
@@ -95,7 +94,7 @@ $reviewCheckStmt = $mysqli->prepare($reviewCheckQuery);
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <h5 class="card-title mb-4">Редактирование профиля</h5>
-                        <form action="../user/edit/update_profile.php" method="post">
+                        <form action="edit/update_profile.php" method="post">
                             <div class="mb-3">
                                 <label for="userName" class="form-label">Имя</label>
                                 <input type="text" id="userName" name="userName" class="form-control" placeholder="Введите ваше имя" value="<?= htmlspecialchars($userData['name']) ?>">
